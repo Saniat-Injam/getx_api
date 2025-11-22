@@ -13,6 +13,7 @@ class HomeController extends GetxController {
   // NetworkCaller? networkCaller;
 
   List<ProductModel> products = [];
+  bool isLoading = false;
 
   @override
   void onInit() {
@@ -24,6 +25,7 @@ class HomeController extends GetxController {
   void getData() async {
     const String url = 'https://fakestoreapi.com/products';
     try {
+      isLoading = true;
       http.Response response = await networkCaller.getRequest(url);
 
       if (response.statusCode == 200) {
@@ -32,6 +34,7 @@ class HomeController extends GetxController {
         for (int i = 0; i < data.length; i++) {
           products.add(ProductModel.fromJson(data[i]));
         }
+        isLoading = false;
         update();
       } else {
         debugPrint('Failed to fetch data. Status code: ${response.statusCode}');

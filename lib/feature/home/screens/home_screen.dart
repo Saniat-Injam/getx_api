@@ -12,23 +12,100 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Home Screen')),
+      appBar: AppBar(title: const Text('Products')),
       //body: const Center(child: Text('Welcome to the Home Screen!')),
+      // body: GetBuilder<HomeController>(
+      //   builder: (_) {
+      //     return ListView.builder(
+      //       itemCount: homeController.products.length,
+      //       itemBuilder: (context, index) {
+      //         ProductModel product = homeController.products[index];
+      //         return Card(
+      //           child: ListTile(
+      //             leading: Image.network(product.image!),
+      //             title: Text(product.title!, overflow: TextOverflow.ellipsis),
+      //             subtitle: Text(product.description!),
+      //           ),
+      //         );
+      //       },
+      //     );
+      //   },
+      // ),
       body: GetBuilder<HomeController>(
         builder: (_) {
-          return ListView.builder(
-            itemCount: homeController.products.length,
-            itemBuilder: (context, index) {
-              ProductModel product = homeController.products[index];
-              return Card(
-                child: ListTile(
-                  leading: Image.network(product.image!),
-                  title: Text(product.title!, overflow: TextOverflow.ellipsis),
-                  subtitle: Text(product.description!),
-                ),
-              );
-            },
-          );
+          return homeController.isLoading
+              ? Center(child: CircularProgressIndicator())
+              : Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: GridView.builder(
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      crossAxisSpacing: 10,
+                      mainAxisSpacing: 10,
+                    ),
+                    itemCount: homeController.products.length,
+                    itemBuilder: (context, index) {
+                      ProductModel product = homeController.products[index];
+                      return Card(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Column(
+                            children: [
+                              Image.network(
+                                product.image!,
+                                width: 80,
+                                height: 80,
+                                fit: BoxFit.cover,
+                              ),
+                              SizedBox(height: 8),
+                              Text(
+                                product.title!,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(fontSize: 18),
+                              ),
+                              SizedBox(height: 8),
+                              Row(
+                                children: [
+                                  Row(
+                                    children: [
+                                      Text(
+                                        'Price: ',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      Text(
+                                        product.price.toString(),
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                      Icon(
+                                        Icons.star,
+                                        color: Colors.orange,
+                                        size: 18,
+                                      ),
+                                      Text(
+                                        product.rating!.rate.toString(),
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                );
         },
       ),
     );

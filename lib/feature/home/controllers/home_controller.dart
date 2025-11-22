@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:nativewrappers/_internal/vm/lib/ffi_native_type_patch.dart';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getx_api/feature/home/models/product_model.dart';
@@ -25,6 +28,11 @@ class HomeController extends GetxController {
 
       if (response.statusCode == 200) {
         debugPrint('Data fetched successfully: ${response.body}');
+        var data = jsonDecode(response.body);
+        for (int i = 0; i < data.length; i++) {
+          products.add(ProductModel.fromJson(data[i]));
+        }
+        update();
       } else {
         debugPrint('Failed to fetch data. Status code: ${response.statusCode}');
       }
